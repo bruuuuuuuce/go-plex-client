@@ -3,7 +3,7 @@ package plex
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"log/slog"
 	"net/http"
 )
 
@@ -58,12 +58,13 @@ type Webhook struct {
 // WebhookEvents holds the actions for each webhook events
 type WebhookEvents struct {
 	events map[string]func(w Webhook)
+	Logger *slog.Logger
 }
 
 // Handler listens for plex webhooks and executes the corresponding function
 func (wh *WebhookEvents) Handler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseMultipartForm(0); err != nil {
-		fmt.Printf("can not read form: %v", err)
+		wh.logger().Error("failed to read webhook form", "error", err)
 		return
 	}
 
@@ -73,14 +74,14 @@ func (wh *WebhookEvents) Handler(w http.ResponseWriter, r *http.Request) {
 
 	if hasPayload {
 		if err := json.Unmarshal([]byte(payload[0]), &hookEvent); err != nil {
-			fmt.Printf("can not parse json: %v", err)
+			wh.logger().Error("failed to decode webhook payload", "error", err)
 			return
 		}
 
 		fn, ok := wh.events[hookEvent.Event]
 
 		if !ok {
-			fmt.Printf("unknown event name: %v\n", hookEvent.Event)
+			wh.logger().Warn("received unknown webhook event", "event", hookEvent.Event)
 			return
 		}
 
