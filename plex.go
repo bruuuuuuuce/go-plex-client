@@ -925,7 +925,7 @@ func (p *Plex) StopPlayback(machineID string) error {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf(resp.Status)
+		return errors.New(resp.Status)
 	}
 
 	return nil
