@@ -94,6 +94,23 @@ results, err := plexConnection.HubSearch("The Walking Dead")
 err = plexConnection.Scrobble("12345")
 ```
 
+**Structured Logging:**
+
+Library logging is disabled by default. To enable leveled, structured logs, configure a standard [`log/slog`](https://pkg.go.dev/log/slog) logger:
+
+```go
+logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+	Level: slog.LevelDebug,
+}))
+plexConnection.SetLogger(logger)
+
+// Webhook handlers can use the same logger.
+webhooks := plex.NewWebhook()
+webhooks.SetLogger(logger)
+```
+
+Use `slog.NewTextHandler` instead of `slog.NewJSONHandler` for human-readable output. Errors, warnings, informational lifecycle events, and debug details are emitted at their corresponding levels.
+
 **Real-time WebSocket Events:**
 
 ```go

@@ -2,7 +2,6 @@ package plex
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -218,9 +217,9 @@ func (p *Plex) SubscribeToNotifications(events *NotificationEvents, interrupt <-
 
 	if err != nil {
 		if resp != nil {
-			fmt.Println("websocket dial error: ", resp.Status)
+			p.logger().Error("failed to connect to websocket", "status", resp.Status, "error", err)
 		} else {
-			fmt.Println("websocket dial error: ", err)
+			p.logger().Error("failed to connect to websocket", "error", err)
 		}
 		fn(err)
 		return
@@ -236,25 +235,26 @@ func (p *Plex) SubscribeToNotifications(events *NotificationEvents, interrupt <-
 			_, message, err := c.ReadMessage()
 
 			if err != nil {
-				fmt.Println("read:", err)
+				if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+					p.logger().Debug("websocket connection closed", "error", err)
+				} else {
+					p.logger().Error("failed to read websocket message", "error", err)
+				}
 				fn(err)
 				return
 			}
 
-			fmt.Printf("%s\n", message)
-
 			var notif WebsocketNotification
 
 			if err := json.Unmarshal(message, &notif); err != nil {
-				fmt.Printf("convert message to json failed: %v\n", err)
+				p.logger().Error("failed to decode websocket message", "error", err)
 				continue
 			}
 
-			// fmt.Println(notif.Type)
 			fn, ok := events.events[notif.Type]
 
 			if !ok {
-				fmt.Printf("unknown websocket event name: %v\n", notif.Type)
+				p.logger().Warn("received unknown websocket event", "event", notif.Type)
 				continue
 			}
 
@@ -274,18 +274,18 @@ func (p *Plex) SubscribeToNotifications(events *NotificationEvents, interrupt <-
 				fn(err)
 			}
 		case <-interrupt:
-			fmt.Println("interrupt")
+			p.logger().Info("closing websocket after interrupt")
 			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 
 			if err != nil {
-				fmt.Println("write close:", err)
+				p.logger().Error("failed to send websocket close message", "error", err)
 				fn(err)
 			}
 
 			select {
 			case <-done:
 			case <-time.After(time.Second):
-				fmt.Println("closing websocket...")
+				p.logger().Debug("forcing websocket connection closed after timeout")
 				c.Close()
 			}
 			return

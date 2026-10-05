@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -100,6 +101,7 @@ type Plex struct {
 	Headers          Headers
 	HTTPClient       http.Client
 	DownloadClient   http.Client
+	Logger           *slog.Logger
 }
 
 // Provider ...
