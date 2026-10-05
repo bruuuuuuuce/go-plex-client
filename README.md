@@ -4,7 +4,7 @@
 
 This is a maintained fork of [jrudio/go-plex-client](https://github.com/jrudio/go-plex-client). Use this fork's module path for new projects:
 
-`go get github.com/bruuuuuuuce/go-plex-client/v2@v2`
+`go get github.com/bruuuuuuuce/go-plex-client/v2@latest`
 
 ## Version 2
 
