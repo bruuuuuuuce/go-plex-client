@@ -950,7 +950,7 @@ func (p *Plex) GetDevices() ([]PMSDevices, error) {
 	}
 
 	if err := xml.NewDecoder(resp.Body).Decode(result); err != nil {
-		fmt.Println(err.Error())
+		p.logger().Error("failed to decode devices response", "error", err)
 
 		return []PMSDevices{}, err
 	}
@@ -1004,7 +1004,7 @@ func (p *Plex) GetServersInfo() (ServerInfo, error) {
 	result := ServerInfo{}
 
 	if err := xml.NewDecoder(resp.Body).Decode(&result); err != nil {
-		fmt.Println(err.Error())
+		p.logger().Error("failed to decode server info response", "error", err)
 
 		return ServerInfo{}, err
 	}
@@ -1059,7 +1059,7 @@ func (p *Plex) GetSections(machineID string) ([]ServerSections, error) {
 	var result SectionIDResponse
 
 	if err := xml.NewDecoder(resp.Body).Decode(&result); err != nil {
-		fmt.Println(err.Error())
+		p.logger().Error("failed to decode sections response", "error", err)
 
 		return []ServerSections{}, err
 	}
@@ -1096,7 +1096,7 @@ func (p *Plex) GetLibraries() (LibrarySections, error) {
 	var result LibrarySections
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		fmt.Println(err.Error())
+		p.logger().Error("failed to decode libraries response", "error", err)
 
 		return LibrarySections{}, err
 	}
@@ -1262,7 +1262,7 @@ func (p *Plex) GetLibraryLabels(sectionKey, sectionIndex string) (LibraryLabels,
 	var result LibraryLabels
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		fmt.Println(err.Error())
+		p.logger().Error("failed to decode library labels response", "error", err)
 
 		return LibraryLabels{}, err
 	}
