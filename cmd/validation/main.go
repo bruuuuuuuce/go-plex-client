@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/jrudio/go-plex-client/v2"
+	"github.com/bruuuuuuuce/go-plex-client/v2"
 )
 
 func main() {
