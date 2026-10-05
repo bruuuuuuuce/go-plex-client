@@ -235,7 +235,11 @@ func (p *Plex) SubscribeToNotifications(events *NotificationEvents, interrupt <-
 			_, message, err := c.ReadMessage()
 
 			if err != nil {
-				p.logger().Error("failed to read websocket message", "error", err)
+				if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+					p.logger().Debug("websocket connection closed", "error", err)
+				} else {
+					p.logger().Error("failed to read websocket message", "error", err)
+				}
 				fn(err)
 				return
 			}
