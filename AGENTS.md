@@ -6,6 +6,7 @@
 - Keep each branch focused on one change and use the `codex/` prefix for agent-created branches.
 - Always submit changes through a pull request. Never commit or push directly to the default branch.
 - Keep commits small, coherent, and free of unrelated formatting or cleanup.
+- Always write commit messages using Conventional Commits: `<type>[optional scope]: <description>` (for example, `docs: clarify installation` or `fix(websocket): handle normal closure`). Use an imperative, lowercase description without a trailing period. Common types are `feat`, `fix`, `docs`, `test`, `refactor`, `ci`, and `chore`. Mark breaking changes with `!` and explain them in a `BREAKING CHANGE:` footer.
 - Preserve existing user changes and do not use destructive Git commands unless explicitly requested.
 
 ## Development
