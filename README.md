@@ -1,8 +1,10 @@
 # Plex.tv and Plex Media Server client written in Go
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/jrudio/go-plex-client/v2.svg)](https://pkg.go.dev/github.com/jrudio/go-plex-client/v2)
+[![Go Reference](https://pkg.go.dev/badge/github.com/bruuuuuuuce/go-plex-client/v2.svg)](https://pkg.go.dev/github.com/bruuuuuuuce/go-plex-client/v2)
 
-`go get -u github.com/jrudio/go-plex-client/v2`
+This is a maintained fork of [jrudio/go-plex-client](https://github.com/jrudio/go-plex-client). Use this fork's module path for new projects:
+
+`go get github.com/bruuuuuuuce/go-plex-client/v2@latest`
 
 ## Version 2
 
@@ -34,7 +36,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jrudio/go-plex-client/v2"
+	"github.com/bruuuuuuuce/go-plex-client/v2"
 )
 
 func getToken() {
@@ -77,7 +79,7 @@ For comprehensive examples, please check the [`example/`](./example) directory. 
 **Basic Operations:**
 
 ```go
-import "github.com/jrudio/go-plex-client/v2"
+import "github.com/bruuuuuuuce/go-plex-client/v2"
 
 plexConnection, err := plex.New("http://192.168.1.2:32400", "myPlexToken")
 if err != nil {
